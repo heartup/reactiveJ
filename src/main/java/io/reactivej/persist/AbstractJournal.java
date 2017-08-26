@@ -1,6 +1,5 @@
 package io.reactivej.persist;
 
-
 import io.reactivej.AbstractComponentBehavior;
 import io.reactivej.ReactiveComponent;
 import io.reactivej.ReactiveRef;

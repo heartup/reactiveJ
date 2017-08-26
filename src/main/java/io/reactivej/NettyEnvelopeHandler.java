@@ -5,8 +5,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/***
- * @author heartup@gmail.com
+/**
+ * @auth heartup@gmail.com on 3/28/16.
  */
 public class NettyEnvelopeHandler extends ChannelInboundHandlerAdapter {
 
@@ -34,13 +34,13 @@ public class NettyEnvelopeHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof Envelope) {
-            transporter.receive((Envelope) msg);
+            transporter.receive((Envelope) msg, ctx.channel());
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        logger.error("", cause);
         ctx.close();
     }
 }

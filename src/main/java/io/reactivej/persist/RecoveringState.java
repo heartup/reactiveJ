@@ -25,6 +25,7 @@ public class RecoveringState extends PersistentComponentState {
         }
         else {
             if (msg instanceof SystemMessage) {
+                // 系统消息需要被立即处理
                 getComponent().getBehavior().onMessage(msg);
             }
             else {

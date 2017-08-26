@@ -3,8 +3,8 @@ package io.reactivej;
 import java.io.Serializable;
 import java.util.concurrent.*;
 
-/***
- * @author heartup@gmail.com
+/**
+ * @auth heartup@gmail.com on 3/25/16.
  */
 public class Scheduler {
 

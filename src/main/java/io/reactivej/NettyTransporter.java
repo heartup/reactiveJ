@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/***
- * @author heartup@gmail.com
+/**
+ * @auth heartup@gmail.com on 3/25/16.
  */
 public class NettyTransporter extends AbstractTransporter {
 
@@ -34,19 +34,25 @@ public class NettyTransporter extends AbstractTransporter {
 
         @Override
         public void operationComplete(ChannelFuture future) throws Exception {
-            logger.info(future.channel() + " close");
+            logger.info(future.channel() + "连接关闭");
+            if (future.cause() != null) {
+                future.cause().printStackTrace();
+            }
             future.removeListener(this);
+            // remove existly this one
             channels.remove(peerId, future.channel());
         }
     }
 
     private static Logger logger = LoggerFactory.getLogger(NettyTransporter.class);
 
+    // server side
     private Channel acceptChannel;
     private NioEventLoopGroup bossGroup;
     private NioEventLoopGroup workerGroup;
     private Set<Channel> inboundChannels = Sets.newConcurrentHashSet();
 
+    // client side
     private EventLoopGroup eventLoop = new NioEventLoopGroup();
     private ConcurrentHashMap<String, Channel> channels = new ConcurrentHashMap<>();
 
@@ -56,8 +62,9 @@ public class NettyTransporter extends AbstractTransporter {
     }
 
     public void init() {
-        logger.info("netty transporter init...");
+        logger.info("NettyTransporter初始化...");
 
+        // Configure the server.
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup();
         try {
@@ -75,14 +82,15 @@ public class NettyTransporter extends AbstractTransporter {
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(
                                     new ObjectEncoder(),
-                                    new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+                                    new ObjectDecoder(ClassResolvers.cacheDisabled(getSystem().getSystemClassLoader())),
                                     new NettyEnvelopeHandler(NettyTransporter.this));
                         }
                     });
 
+            // Start the server.
             acceptChannel = b.bind(getSystem().getPort()).sync().channel();
         } catch (InterruptedException e) {
-            logger.error("exception in netty transporter init", e);
+            logger.error("初始化NettyTransporter发生异常", e);
             System.exit(1);
         }
     }
@@ -97,6 +105,7 @@ public class NettyTransporter extends AbstractTransporter {
         if (channel != null)
             return channel;
 
+        logger.info("开始创建到{}:{}的连接", host, port);
         try {
             Bootstrap b = new Bootstrap();
             b.group(eventLoop).channel(NioSocketChannel.class)
@@ -110,10 +119,11 @@ public class NettyTransporter extends AbstractTransporter {
                             p.addLast(
                                     new ObjectEncoder(),
                                     new ObjectDecoder(ClassResolvers
-                                            .cacheDisabled(null)));
+                                            .cacheDisabled(getSystem().getSystemClassLoader())));
                         }
                     });
 
+            // Make the connection attempt.
             Channel workerChannel = b.connect(host, port).sync().channel();
             workerChannel.closeFuture().addListener(new RemoteWorkerChannelCloseListener(peerId));
             Channel existed = channels.putIfAbsent(peerId, workerChannel);
@@ -125,6 +135,7 @@ public class NettyTransporter extends AbstractTransporter {
                 return workerChannel;
             }
         } catch (InterruptedException e) {
+            logger.error("创建到" + host + ":" + port + "的连接的时候发生异常", e);
             System.exit(1);
         }
         return null;
@@ -154,14 +165,14 @@ public class NettyTransporter extends AbstractTransporter {
     }
 
     public void suspendReadingMessage() {
-        logger.info("**********pause receive message*************");
+        logger.info("**********暂停接受消息*************");
         for (Channel c : getInboundChannels()) {
             c.config().setAutoRead(false);
         }
     }
 
     public void resumeReadingMessage() {
-        logger.info("*************resume receive message**************");
+        logger.info("*************继续接受消息**************");
         for (Channel c : getInboundChannels()) {
             c.config().setAutoRead(true);
         }

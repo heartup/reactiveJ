@@ -6,11 +6,10 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/***
- * @author heartup@gmail.com
- */
 public class ReactiveCell implements ReactiveContext {
 
 	public static Logger logger = LoggerFactory.getLogger(ReactiveCell.class);
@@ -53,6 +52,9 @@ public class ReactiveCell implements ReactiveContext {
 		}
 
 		getChildren().remove(childName);
+
+		if (logger.isDebugEnabled())
+			logger.debug("组件[{}]被销毁", getSelf().getPath() + ReactiveSystem.componentSplitter + childName);
 	}
 
 	public ReactiveComponent getComponent() {
@@ -107,6 +109,11 @@ public class ReactiveCell implements ReactiveContext {
 	@Override
 	public ReactiveSystem getSystem() {
 		return system;
+	}
+
+	@Override
+	public ReactiveRef createChild(String childName) {
+		return system.createReactiveComponent(getSelf(), childName);
 	}
 
 	@Override

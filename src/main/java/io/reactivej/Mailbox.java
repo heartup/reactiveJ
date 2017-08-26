@@ -2,13 +2,16 @@ package io.reactivej;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.misc.Unsafe;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /***
  * @author heartup@gmail.com
  *
+ * 具有保序处理和单线程处理的内存模型语义
  */
 public class Mailbox implements Runnable {
     private static Logger logger = LoggerFactory.getLogger(Mailbox.class);
@@ -42,6 +45,10 @@ public class Mailbox implements Runnable {
         status.set(0);
     }
 
+    /**
+     * 如果已经在执行返回false，否则抢占设置为1，设置成功的是true
+     * @return
+     */
     public boolean setAsScheduled() {
         return status.compareAndSet(0, 1);
     }
@@ -54,12 +61,18 @@ public class Mailbox implements Runnable {
     public void run() {
         try {
             if (isScheduled()) {  // piggybacking on synchronization makes it behave as one thread
+                ClassLoader systemClassLoader = getComponentCell().getSystem().getSystemClassLoader();
+                if (systemClassLoader != null && Thread.currentThread().getContextClassLoader() != systemClassLoader) {
+                    Thread.currentThread().setContextClassLoader(systemClassLoader);
+                }
+
                 processAllSystemMessages();
                 processMailbox();
             }
         }
         finally {
             setAsIdle();  // piggybacking on synchronization makes it behave as one thread
+            // 没有新消息，但是要检查queue里面有没有新到消息
             getComponentCell().getDispatcher().registerForExecution(this, false);
         }
     }
@@ -85,17 +98,17 @@ public class Mailbox implements Runnable {
                 }
             }
             catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                Thread.currentThread().interrupt();  //  让后续代码处理线程中断
             }
-            catch (Exception e) {
-                logger.error("system message [" + env.toString() + "] exception", e);
+            catch (Throwable e) {
+                handleFailure(env, e);
             }
         }
     }
 
     public void processMailbox() {
         if (logger.isDebugEnabled()) {
-            logger.debug("queue of [{}] pending message [{}]", getComponentCell().getSelf(), getQueue().size());
+            logger.debug("队列[{}]中待处理的消息还有[{}]", getComponentCell().getSelf(), getQueue().size());
         }
 
         int processed = 0;
@@ -107,17 +120,16 @@ public class Mailbox implements Runnable {
                 componentCell.getComponent().receiveMessage(env.getMessage());
             }
             catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                Thread.currentThread().interrupt();  //  让后续代码处理线程中断
             }
-            catch (Exception e) {
+            catch (Throwable e) {
                 handleFailure(env, e);
             }
-
             processed ++;
         }
     }
 
-    private void handleFailure(Envelope env, Exception cause) {
+    private void handleFailure(Envelope env, Throwable cause) {
         componentCell.getParent().tell(new Failure(env, cause), componentCell.getSelf());
     }
 

@@ -47,7 +47,7 @@ public class PersistingState extends PersistentComponentState {
     protected void onWriteMessagesSuccessful(WriteMessagesSuccessful msg) throws Exception {
         PersistentReactiveComponent.MessageAndHandler head = getComponent().getPendingInvocations().remove(0);
         try {
-            head.getHandler().apply(head.getMessage());
+            head.getHandler().apply(head.getMessage());  // 如果发生异常,不要block后续消息的处理
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (Exception e) {

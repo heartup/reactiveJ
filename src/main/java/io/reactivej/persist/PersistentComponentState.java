@@ -2,8 +2,8 @@ package io.reactivej.persist;
 
 import java.io.Serializable;
 
-/***
- * @author heartup@gmail.com
+/**
+ * @auth heartup@gmail.com on 8/13/16.
  */
 public abstract class PersistentComponentState {
 

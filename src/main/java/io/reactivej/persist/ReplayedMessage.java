@@ -1,6 +1,7 @@
 package io.reactivej.persist;
 
 import com.google.common.base.MoreObjects;
+import io.reactivej.ReactiveRef;
 
 import java.io.Serializable;
 import java.util.List;

@@ -36,11 +36,12 @@ public class RootComponent extends ReactiveComponent {
 
     private void onCheckSystemLoad(CheckSystemLoad msg) {
         Runtime rt = Runtime.getRuntime();
+        long maxMemory = rt.maxMemory();
         long totalMemory = rt.totalMemory();
         long freeMemory = rt.freeMemory();
         long usedMemory = totalMemory - freeMemory;
 
-        double perc = usedMemory * 1.0 / totalMemory;
+        double perc = usedMemory * 1.0 / maxMemory;
 
         if (!suspended && perc > 0.95) {
             getContext().getSystem().getTransporter().suspendReadingMessage();

@@ -1,5 +1,6 @@
 package io.reactivej.persist;
 
+import com.google.common.primitives.Longs;
 import io.reactivej.ReactiveException;
 import org.apache.commons.lang3.SerializationUtils;
 import org.iq80.leveldb.DB;
@@ -10,8 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
-/***
- * @author heartup@gmail.com
+/**
+ * @auth heartup@gmail.com on 8/16/16.
  */
 public class LevelDBStore extends AbstractStore {
 

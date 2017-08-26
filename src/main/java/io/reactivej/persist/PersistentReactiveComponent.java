@@ -10,9 +10,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-/***
- * @author heartup@gmail.com
- */
 public abstract class PersistentReactiveComponent extends ReactiveComponent {
 
 	private static Logger logger = LoggerFactory.getLogger(PersistentReactiveComponent.class);
@@ -56,6 +53,7 @@ public abstract class PersistentReactiveComponent extends ReactiveComponent {
 
 	@Override
 	public void preStart() {
+		// set behavior when recovery complete
 		setCurrentState(getRecoveringState());
 		getStore().tell(new StartRecovery(getPersistentId()), getSelf());
 	}
@@ -113,7 +111,7 @@ public abstract class PersistentReactiveComponent extends ReactiveComponent {
 		Envelope msg = ((ReactiveCell) getContext()).getCurrentMessage();
 		stashedMessages.add(msg);
 		if (logger.isDebugEnabled())
-			logger.debug("stash message [" + msg.toString() + "]");
+			logger.debug("存储消息[" + msg.toString() + "]");
 	}
 
 	protected void unstash() {
@@ -121,7 +119,7 @@ public abstract class PersistentReactiveComponent extends ReactiveComponent {
 			Envelope msg = stashedMessages.remove(0);
 			((ReactiveCell) getContext()).getMailbox().getQueue().addFirst(msg);
 			if (logger.isDebugEnabled())
-				logger.debug("unstash message [" + msg.toString() + "]");
+				logger.debug("提取消息[" + msg.toString() + "]");
 		}
 	}
 
@@ -162,7 +160,7 @@ public abstract class PersistentReactiveComponent extends ReactiveComponent {
 
 	public void setCurrentState(PersistentComponentState currentState) {
 		if (logger.isDebugEnabled())
-			logger.debug(toString() + " state change to " + currentState.toString());
+			logger.debug(toString() + "切换到状态" + currentState.toString());
 		this.currentState = currentState;
 	}
 

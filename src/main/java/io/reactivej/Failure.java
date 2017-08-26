@@ -2,15 +2,12 @@ package io.reactivej;
 
 import com.google.common.base.MoreObjects;
 
-/***
- * @author heartup@gmail.com
- */
 public class Failure extends SystemMessage {
 
     private Envelope envelope;
-    private Exception cause;
+    private Throwable cause;
 
-    public Failure(Envelope envelope, Exception e) {
+    public Failure(Envelope envelope, Throwable e) {
         this.envelope = envelope;
         this.cause = e;
     }
@@ -19,7 +16,7 @@ public class Failure extends SystemMessage {
         return envelope;
     }
 
-    public Exception getCause() {
+    public Throwable getCause() {
         return cause;
     }
 

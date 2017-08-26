@@ -146,7 +146,7 @@ public class ReactiveTest {
 
     @Test
     public void localTest() throws InterruptedException {
-        ReactiveSystem sys1 = new ReactiveSystem(1991, "127.0.0.1:2181", "test_reactive");
+        ReactiveSystem sys1 = new DefaultReactiveSystem();
         sys1.init();
         ReactiveRef greeter = sys1.createReactiveComponent("greeter", true, Greeter.class.getName());
         ReactiveRef greetPrinter = sys1.createReactiveComponent("greetPrinter", true, GreetPrinter.class.getName());
@@ -157,9 +157,9 @@ public class ReactiveTest {
 
     @Test
     public void remoteTest() throws InterruptedException {
-        ReactiveSystem sys1 = new ReactiveSystem(1991, "127.0.0.1:2181", "test_reactive");
+        ReactiveSystem sys1 = new DefaultReactiveSystem();
         sys1.init();
-        ReactiveSystem sys2 = new ReactiveSystem(1992, "127.0.0.1:2181", "test_reactive");
+        ReactiveSystem sys2 = new DefaultReactiveSystem();
         sys2.init();
         ReactiveRef greeter = sys1.createReactiveComponent("greeter", true, Greeter.class.getName());
         ReactiveRef greetPrinter = sys2.createReactiveComponent("greetPrinter", true, GreetPrinter.class.getName());
@@ -170,7 +170,7 @@ public class ReactiveTest {
 
     @Test
     public void superviseTest() throws InterruptedException {
-        ReactiveSystem sys1 = new ReactiveSystem(1991, "127.0.0.1:2181", "test_reactive");
+        ReactiveSystem sys1 = new DefaultReactiveSystem();
         sys1.init();
         ReactiveRef supervisor = sys1.createReactiveComponent("supervisor", true, Supervisor.class.getName());
         ReactiveRef worker = supervisor.createReactiveComponent("worker", true, Worker.class.getName());

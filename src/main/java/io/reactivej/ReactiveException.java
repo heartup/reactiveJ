@@ -1,7 +1,7 @@
 package io.reactivej;
 
 /***
- * @author heartup@gmail.com
+ * ReactiveException 是Reactive系统抛出的运行时异常信息
  */
 public class ReactiveException extends RuntimeException {
 

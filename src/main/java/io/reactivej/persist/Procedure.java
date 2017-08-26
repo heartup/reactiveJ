@@ -2,9 +2,8 @@ package io.reactivej.persist;
 
 import java.io.Serializable;
 
-/***
- * @author heartup@gmail.com
- * @param <T>
+/**
+ * @auth heartup@gmail.com on 4/1/16.
  */
 public interface Procedure<T> {
 

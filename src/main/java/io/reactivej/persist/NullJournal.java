@@ -19,11 +19,6 @@ public class NullJournal extends AbstractJournal {
 
     @Override
     protected void atomicWrite(AtomicWrite write) {
-        System.out.println("persist: " + write.toString());
-        try {
-            Thread.currentThread().sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        System.out.println("持久化: " + write.toString());
     }
 }

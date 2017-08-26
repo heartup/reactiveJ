@@ -12,24 +12,27 @@ import java.io.Serializable;
  */
 public class RedisStore extends AbstractStore {
 
-    private final Jedis cacheClient;
+    private final Jedis jedis;
 
-    public RedisStore(Jedis cacheClient) {
-        this.cacheClient = cacheClient;
+    public RedisStore(Jedis jedis) {
+        this.jedis = jedis;
     }
 
-    public Jedis getCacheClient() {
-        return cacheClient;
+    public Jedis getJedis() {
+        return jedis;
     }
+
 
     @Override
     protected void snapshot(Snapshot snapshot) {
-        getCacheClient().set(SafeEncoder.encode(getRedisStoreKeyByPersistentId(snapshot.getPersistentId().toString())), SerializationUtils.serialize(snapshot));
+        getJedis().set(SafeEncoder.encode(getRedisStoreKeyByPersistentId(snapshot.getPersistentId().toString())),
+                SerializationUtils.serialize(snapshot));
     }
 
     @Override
     protected Snapshot recover(Serializable persistentId) {
-        return (Snapshot) SerializationUtils.deserialize(getCacheClient().get(SafeEncoder.encode(getRedisStoreKeyByPersistentId(persistentId.toString()))));
+        byte[] bytes = getJedis().get(SafeEncoder.encode(getRedisStoreKeyByPersistentId(persistentId.toString())));
+        return bytes == null ? null : (Snapshot) SerializationUtils.deserialize(bytes);
     }
 
     private String getRedisStoreKeyByPersistentId(String persistentId) {

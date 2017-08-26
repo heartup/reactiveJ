@@ -5,7 +5,7 @@ import com.google.common.base.MoreObjects;
 import java.io.Serializable;
 
 /**
- * @author heartup@gmail.com
+ * @auth heartup@gmail.com
  */
 public class ClusterClient extends ReactiveComponent {
 

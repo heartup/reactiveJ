@@ -2,8 +2,8 @@ package io.reactivej;
 
 import java.util.Map;
 
-/***
- * @author heartup@gmail.com
+/**
+ * @auth heartup@gmail.com on 3/25/16.
  */
 public interface ReactiveContext {
 
@@ -14,6 +14,8 @@ public interface ReactiveContext {
     public ReactiveRef getParent();
 
     public ReactiveRef getSelf();
+
+    public ReactiveRef createChild(String childName);
 
     public ReactiveRef createChild(String childName, boolean useGlobalDispatcher, String className);
 

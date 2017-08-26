@@ -5,9 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
-/***
- * @author heartup@gmail.com
- */
 public abstract class ReactiveComponent {
 
 	private static Logger logger = LoggerFactory.getLogger(ReactiveComponent.class);

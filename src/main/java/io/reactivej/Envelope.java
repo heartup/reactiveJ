@@ -1,15 +1,17 @@
 package io.reactivej;
 
+import io.netty.channel.Channel;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.io.Serializable;
 
-/***
- * @author heartup@gmail.com
- */
 public class Envelope implements Serializable {
 
 	private ReactiveRef receiver;
 	private Serializable message;
 	private ReactiveRef sender;
+
+	private transient Channel fromChannel;
 	
 	public Envelope() {
 	}
@@ -18,6 +20,11 @@ public class Envelope implements Serializable {
 		this.receiver = receiver;
 		this.message = message;
 		this.sender = sender;
+	}
+
+	public Envelope(ReactiveRef receiver, Serializable message, ReactiveRef sender, Channel fromChannel) {
+		this(receiver, message, sender);
+		this.fromChannel = fromChannel;
 	}
 	
 	public ReactiveRef getReceiver() {
@@ -38,6 +45,14 @@ public class Envelope implements Serializable {
 
 	public void setSender(ReactiveRef sender) {
 		this.sender = sender;
+	}
+
+	public Channel getFromChannel() {
+		return fromChannel;
+	}
+
+	public void setFromChannel(Channel fromChannel) {
+		this.fromChannel = fromChannel;
 	}
 
 	@Override

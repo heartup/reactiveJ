@@ -20,7 +20,7 @@ public class ProcessingCommandState extends PersistentComponentState {
             getComponent().setCurrentState(getComponent().getPersistingState());
         }
         else {
-            getComponent().unstash();
+            getComponent().unstash();  // 继续处理下一条被stash的消息
         }
     }
 }
