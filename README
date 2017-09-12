@@ -2,10 +2,12 @@ Reactive Java Component
 
 Quick Start:
 
-ReactiveSystem sys1 = new ReactiveSystem(1991, "127.0.0.1:2181", "test_reactive");
-sys1.init();
-ReactiveSystem sys2 = new ReactiveSystem(1992, "127.0.0.1:2181", "test_reactive");
-sys2.init();
-ReactiveRef greeter = sys1.createReactiveComponent("greeter", true, Greeter.class.getName());
-ReactiveRef greetPrinter = sys2.createReactiveComponent("greetPrinter", true, GreetPrinter.class.getName());
-sys2.getScheduler().scheduleOnce(0, greeter, new Greet(), greetPrinter);
+        ConfigReactiveSystem sys1 = new ConfigReactiveSystem();
+        sys1.setPort(1991);
+        sys1.init();
+        ConfigReactiveSystem sys2 = new ConfigReactiveSystem();
+        sys2.setPort(1992);
+        sys2.init();
+        ReactiveRef greeter = sys1.createReactiveComponent("greeter", true, Greeter.class.getName());
+        ReactiveRef greetPrinter = sys2.createReactiveComponent("greetPrinter", true, GreetPrinter.class.getName());
+        sys2.getScheduler().scheduleOnce(0, greeter, new Greet(), greetPrinter);
