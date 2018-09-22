@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * @auth heartup@gmail.com on 8/16/16.
+ * Created by heartup@gmail.com on 8/16/16.
  */
 public class LevelDBStore extends AbstractStore {
 
-    public static String STORE_FOLDER = System.getProperty("user.home") + File.separator + "reactivej" + File.separator + "snapshot" + File.separator;
+    public static String STORE_FOLDER = System.getProperty("user.home") + File.separator + "dcf" + File.separator + "snapshot" + File.separator;
 
     @Override
     protected void snapshot(Snapshot snapshot) {

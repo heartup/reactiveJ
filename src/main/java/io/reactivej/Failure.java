@@ -1,6 +1,7 @@
 package io.reactivej;
 
 import com.google.common.base.MoreObjects;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 public class Failure extends SystemMessage {
 
@@ -24,7 +25,7 @@ public class Failure extends SystemMessage {
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("envelope", envelope)
-                .add("cause", cause)
+                .add("cause", ExceptionUtils.getStackTrace(cause))
                 .toString();
     }
 }

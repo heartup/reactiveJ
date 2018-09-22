@@ -3,7 +3,7 @@ package io.reactivej.persist;
 import java.io.Serializable;
 
 /**
- * @auth heartup@gmail.com on 4/1/16.
+ * Created by heartup@gmail.com on 4/1/16.
  */
 public interface Procedure<T> {
 

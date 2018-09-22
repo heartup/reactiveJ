@@ -5,7 +5,7 @@ import io.reactivej.persist.RedisStore;
 import redis.clients.jedis.Jedis;
 
 /**
- * @author heartup@gmail.com on 2017/3/15.
+ * Created by heartup@gmail.com on 2017/3/15.
  */
 public class ZkRedisReactiveSystem extends ZkCacheReactiveSystem {
 

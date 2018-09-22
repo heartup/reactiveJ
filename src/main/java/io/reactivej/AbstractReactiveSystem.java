@@ -1,7 +1,7 @@
 package io.reactivej;
 
 import io.reactivej.persist.PersistentReactiveComponent;
-import io.reactivej.util.HostUtil;
+import com.jdjr.cds.job.common.util.HostUtil;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.slf4j.Logger;

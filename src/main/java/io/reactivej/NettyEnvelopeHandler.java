@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @auth heartup@gmail.com on 3/28/16.
+ * Created by heartup@gmail.com on 3/28/16.
  */
 public class NettyEnvelopeHandler extends ChannelInboundHandlerAdapter {
 

@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @auth heartup@gmail.com on 3/25/16.
+ * Created by heartup@gmail.com on 3/25/16.
  */
 public class NettyTransporter extends AbstractTransporter {
 

@@ -3,6 +3,8 @@ package io.reactivej.persist;
 import io.reactivej.AbstractComponentBehavior;
 import io.reactivej.ReactiveComponent;
 import io.reactivej.ReactiveRef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
  * @author heartup@gmail.com
  */
 public abstract class AbstractJournal extends ReactiveComponent {
+    private static Logger logger = LoggerFactory.getLogger(AbstractJournal.class);
 
     private AbstractComponentBehavior defaultBehavior = new AbstractComponentBehavior(this) {
         @Override
@@ -55,7 +58,15 @@ public abstract class AbstractJournal extends ReactiveComponent {
     protected void onWriteMessages(WriteMessages msg) {
         List<AtomicWrite> writes = msg.getWrites();
         for (AtomicWrite write : writes) {
-            atomicWrite(write);
+            boolean sec = true;
+            try {
+                atomicWrite(write);
+            }
+            catch (Exception e) {
+                // 暂时忽略，只打印异常信息
+                logger.error("", e);
+                sec = false;
+            }
 
             ReactiveRef sender = null;
             if (write.getSender() != null) {
@@ -63,7 +74,13 @@ public abstract class AbstractJournal extends ReactiveComponent {
             }
 
             for (Serializable e : write.getMessages()) {
-                getSender().tell(new WriteMessagesSuccessful(write.getPersistentId(), write.getPersistSequence()), sender);
+                if (sec) {
+                    getSender().tell(new WriteMessagesSuccessful(write.getPersistentId(), write.getPersistSequence()), sender);
+                }
+                else {
+                    // 忽略错误，按成功处理
+                    getSender().tell(new WriteMessagesSuccessful(write.getPersistentId(), write.getPersistSequence()), sender);
+                }
             }
         }
     }

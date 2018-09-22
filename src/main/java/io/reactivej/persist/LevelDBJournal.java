@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 public class LevelDBJournal extends AbstractJournal {
 
-    public static String JOUNAL_FOLDER = System.getProperty("user.home") + File.separator + "reactivej" + File.separator + "journal" + File.separator;
+    public static String JOUNAL_FOLDER = System.getProperty("user.home") + File.separator + "dcf" + File.separator + "journal" + File.separator;
 
     private DBComparator comparator = new DBComparator(){
         public int compare(byte[] key1, byte[] key2) {

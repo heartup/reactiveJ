@@ -3,7 +3,7 @@ package io.reactivej;
 import java.util.Map;
 
 /**
- * @auth heartup@gmail.com on 3/25/16.
+ * Created by heartup@gmail.com on 3/25/16.
  */
 public interface ReactiveContext {
 
