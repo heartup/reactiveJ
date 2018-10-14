@@ -27,7 +27,7 @@ public abstract class ReactiveComponent {
 
 	public void onSupervise(SystemMessage msg) {
 		if (msg instanceof Failure) {
-			logger.error("", ((Failure) msg).getCause());
+			logger.error("Failure:", ((Failure) msg).getCause());
 		}
 	}
 
