@@ -129,9 +129,11 @@ public class NettyTransporter extends AbstractTransporter {
             Channel existed = channels.putIfAbsent(peerId, workerChannel);
             if (existed != null) {
                 workerChannel.close().sync();
+                logger.info("重复利用到{}:{}的连接", host, port);
                 return existed;
             }
             else {
+                logger.info("成功创建到{}:{}的连接", host, port);
                 return workerChannel;
             }
         } catch (InterruptedException e) {
